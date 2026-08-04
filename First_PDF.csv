@@ -1,0 +1,3 @@
+﻿page_number;title;objective;concepts
+1;Module 1: Data Cleaning Fundamentals;Learn to identify and handle missing, duplicate, and inconsistent data.;NaN detection, drop_duplicates, string normalization, dtype conversion.
+2;Module 2: Merging and Joining Tables;Combine data from multiple sources without losing or duplicating records.;merge direction, how parameter, orphan record handling, key matching.

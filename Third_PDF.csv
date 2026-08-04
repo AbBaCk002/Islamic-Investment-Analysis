@@ -1,0 +1,6 @@
+﻿page_number;title;objective;concepts
+1;Module 1: Data Cleaning Fundamentals;Learn to identify and handle missing, duplicate, and inconsistent data.;NaN detection, drop_duplicates, string normalization, dtype conversion.
+2;Module 2: Merging and Joining Tables;Combine data from multiple sources without losing or duplicating records.;merge direction, how parameter, orphan record handling, key matching.
+1;Module 3: Pivot Tables and Aggregation;Summarize large datasets into meaningful cross-tabulated views.;index, columns, values, aggfunc, multi-level groupby.
+2;Module 4: Custom Row Classification;Apply business rules to classify records using custom logic.;apply function, row-wise operations, conditional labeling.
+3;Module 5: Time Series Aggregation;Summarize transactional data by time period and visualize trends.;datetime parsing, resample, monthly grouping, trend charts.
