@@ -1,7 +1,6 @@
 
 
-# تحليل مبيعات شركة متكامل
-# البيانات:
+
 
 import pandas as pd 
 import matplotlib.pyplot as plt 
@@ -38,7 +37,7 @@ print(company.groupby('department').agg({
 company['pm_by_region'] = company.groupby('region')['profit_margin'].mean()
 
 print("\n--- الموظفون الذين لديهم هامش ربح أقل من 25% ---")
-print(company[company['profit_margin'] < 25.0][['name', 'profit_margin']]) # can pls tell me why do we use two brackets ? [[]]? 
+print(company[company['profit_margin'] < 25.0][['name', 'profit_margin']]) 
 # ====----
 Desc = company.groupby('department')['sales'].sum().sort_values(ascending= False)
 Desc.plot(kind='bar', color='grey', figsize=(10, 6))
