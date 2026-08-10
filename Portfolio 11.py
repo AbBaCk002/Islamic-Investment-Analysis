@@ -37,9 +37,7 @@ def check_business(sector):
     else:
         return 'Yes'
 banks['Halal_Business'] = banks['Sector'].apply(check_business)
-# 'Alcohol': its haram 
-#  'Gambling': its haram
-#  'Banking' : has riba in it  
+
 
 def aaoifi(row):
     if (row['Halal_Business'] == 'Yes' and 
