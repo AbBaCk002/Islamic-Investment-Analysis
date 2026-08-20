@@ -33,6 +33,9 @@ orders.loc[orders['Cust_Id'].isin([999, 998]), 'Data_Issue'] = 'Orphan Customer 
 orders['Net Amount'] = orders['Order Amount'] * (1 - orders['Discount %'] /100) 
 full = pd.merge(customers , orders , on= 'Cust_Id' ,how= 'right')
 full= full.set_index('Cust_Id')
+
+# fillna(0) instead of mean: Orphan IDs (999, 998) have unconfirmed values.
+# Replacing with 0 avoids inflating total sales without empirical proof.
 full['Order Amount'] = full['Order Amount'].fillna(0)
 full['Net Amount'] = full['Net Amount'].fillna(0)
 
