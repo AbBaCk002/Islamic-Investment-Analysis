@@ -26,9 +26,16 @@ orders['Data_Issue'] = 'Valid'
 
 orders.loc[orders['Cust_Id'].isin([999, 998]), 'Data_Issue'] = 'Orphan Customer ID (Unmapped)'
 
+
+# Order_Amount_Average = full['Order Amount'].mean()
+# full['Order Amount'] = full['Order Amount'].fillna(Order_Amount_Average).round(0)
+
 orders['Net Amount'] = orders['Order Amount'] * (1 - orders['Discount %'] /100) 
 full = pd.merge(customers , orders , on= 'Cust_Id' ,how= 'right')
 full= full.set_index('Cust_Id')
+full['Order Amount'] = full['Order Amount'].fillna(0)
+full['Net Amount'] = full['Net Amount'].fillna(0)
+
 
 dept_pivot = full.pivot_table(
     index='City',
@@ -45,23 +52,23 @@ full.groupby('Membership Tier').agg({
 }))
 
 print(full)
-
+valid_customers = full.dropna(subset=['Customer Name'])
 
 plt.figure(figsize=(10, 5))
-plt.bar(full['Customer Name'], full['Order Amount'], color='teal')
-plt.title('إجمالي المبيعات لكل موظف (Total Sales per Employee)')
-plt.xlabel('الموظف')
-plt.ylabel('المبيعات (MAD)')
+plt.bar(valid_customers['Customer Name'], valid_customers['Order Amount'], color='teal')
+plt.title('Total Sales per Customer')
+plt.xlabel('Customer')
+plt.ylabel('Sales (MAD)')
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.savefig('customer_orders.png', dpi=150)
 plt.show()
 
-
-ax = dept_pivot.plot(kind='bar',color='darkorange', figsize=(10, 6))
-plt.title('متوسط المبيعات حسب  (Average Sales by Membership Tier)')
+colors = ['#cd7f32', '#ffd700', '#c0c0c0']  # برونزي، ذهبي، فضي
+ax = dept_pivot.plot(kind='bar',color = colors,  figsize=(10, 6))
+plt.title('Average Sales by Membership Tier')
 plt.xlabel('Membership Tier')
-plt.ylabel('متوسط المبيعات (MAD)')
+plt.ylabel('Average sales(MAD)')
 plt.tight_layout()
 plt.savefig('Membership Tier_average.png', dpi=150)
 plt.show()
