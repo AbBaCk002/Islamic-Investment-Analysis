@@ -69,7 +69,7 @@ plt.xlabel('P Raning ')
 plt.ylabel('Sector')
 plt.grid(True, linestyle='--', alpha=0.5)
 plt.tight_layout()
-plt.savefig('P_ranking_Sector.png', dpi=150)
+plt.savefig('Ranking By Points_Sector.png', dpi=150)
 
 plt.show()
 
