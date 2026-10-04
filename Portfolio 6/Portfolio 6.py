@@ -1,66 +1,83 @@
 
 
 
+import pandas as pd
+import matplotlib.pyplot as plt
 
-import pandas as pd 
-import matplotlib.pyplot as plt 
-
-employees = pd.read_excel (
-        r'C:\Users\Nisserine\Desktop\GOAL\Day 11\Portfolio 6\portfolio 6 excell\employees_raw.xlsx',
+employees = pd.read_excel(
+    r'C:\Users\Nisserine\Desktop\GOAL\Day 11\6\6_real\employees_raw.xlsx',
         engine= 'openpyxl'
 )
-
 sales = pd.read_excel(
-    r'C:\Users\Nisserine\Desktop\GOAL\Day 11\Portfolio 6\portfolio 6 excell\sales_raw.xlsx',
-    engine='openpyxl'
+    r'C:\Users\Nisserine\Desktop\GOAL\Day 11\6\6_real\sales_raw.xlsx',
+    engine= 'openpyxl'
 )
+
+#---
+Fdata_issue = ' Unknown Date'
 
 employees.columns = employees.columns.str.upper().str.strip()
 sales.columns = sales.columns.str.upper().str.strip()
 
 employees['EMP_ID'] = employees['EMP_ID'].astype(str).str.strip()
-employees['EMP_ID'] = pd.to_numeric(employees['EMP_ID'], errors='coerce')
+employees['EMP_ID'] = pd.to_numeric(employees['EMP_ID'] , errors= 'coerce')
+employees = employees.drop_duplicates(subset= ['EMP_ID'] , keep= 'first')
 
-employees= employees.drop_duplicates(subset=['EMP_ID'] , keep= 'first')
 employees['REGION'] = employees['REGION'].str.upper().str.strip()
 employees['DEPARTMENT'] = employees['DEPARTMENT'].str.upper().str.strip()
-employees['HIRE DATE'] = pd.to_datetime(employees['HIRE DATE'], errors='coerce') 
+employees['HIRE DATE'] = pd.to_datetime(employees['HIRE DATE'] , errors='coerce')
+employees['HIRE DATE'] = employees['HIRE DATE'].dt.date
+
 employees['FULL NAME'] = employees['FULL NAME'].fillna('Unknown Name (106)')
+
 average_salary = employees['MONTHLY SALARY (MAD)'].mean()
-employees['MONTHLY SALARY (MAD)'] = employees['MONTHLY SALARY (MAD)'].fillna(average_salary).round(0) 
-employees['HIRE DATE'] = employees['HIRE DATE'].ffill() 
-#--
+employees['MONTHLY SALARY (MAD)'] = employees['MONTHLY SALARY (MAD)'].fillna(average_salary).round(0)
+employees['HIRE DATE'] = employees['HIRE DATE'].fillna(Fdata_issue)
 
-sales['SALE AMOUNT'] = sales['SALE AMOUNT'].astype(str).str.strip() 
-sales['SALE AMOUNT'] = pd.to_numeric(sales['SALE AMOUNT'], errors='coerce')
-sales['EMPLOYEE_ID'] = sales['EMPLOYEE_ID'].replace(999, 106)
-average_sales = sales['SALE AMOUNT'].mean()
-sales['SALE AMOUNT'] = sales['SALE AMOUNT'].fillna(average_sales).round(0)
-sales['SALE AMOUNT'] = pd.to_numeric(sales['SALE AMOUNT'], errors='coerce')
 
-sales['SALE_DATE'] = sales['SALE_DATE'].astype(str).str.strip() 
-sales['SALE_DATE'] = sales['SALE_DATE'].str.upper().str.strip()
-sales['SALE_DATE'] = pd.to_datetime(sales['SALE_DATE'])
+#---
 
-final_table = pd.merge(sales, employees, left_on='EMPLOYEE_ID', right_on='EMP_ID', how='left')
+sales['Data_Issue'] = 'Valid'
+
+sales['SALE AMOUNT'] = sales['SALE AMOUNT'].astype(str).str.strip()
+sales['SALE AMOUNT'] = pd.to_numeric(sales['SALE AMOUNT'] , errors='coerce')
+
+
+
+
+
+sales.loc[sales['EMPLOYEE_ID'] == 999 , 'Data_Issue'] = 'Unknown ID (999)'
+
+
+average_salary_tsales = sales['SALE AMOUNT'].mean()
+sales['SALE AMOUNT'] = sales['SALE AMOUNT'].fillna(average_salary_tsales).round(0)
+
+
+sales['SALE_DATE'] = sales['SALE_DATE'].astype(str).str.strip()
+sales['SALE_DATE'] = pd.to_datetime(sales['SALE_DATE'], errors='coerce')
+sales['SALE_DATE'] = sales['SALE_DATE'].dt.date
+
+#----
+
+final_table = pd.merge(employees , sales , left_on= 'EMP_ID' , right_on='EMPLOYEE_ID' , how='left')
+
 employee_sales = final_table.groupby('FULL NAME')['SALE AMOUNT'].sum().sort_values(ascending=False).reset_index()
 
 
-# print(final_table[final_table['EMPLOYEE_ID'] == 106][['EMPLOYEE_ID', 'FULL NAME', 'SALE AMOUNT', 'SALE_DATE']])
-final_table['PROFIT'] = final_table['SALE AMOUNT'] - final_table['COST'] 
+final_table['PROFIT'] = final_table['SALE AMOUNT'] - final_table['COST']
 
 final_table = final_table.set_index('EMPLOYEE_ID')
 
-dept_pivot = final_table.pivot_table(
-    values='SALE AMOUNT', 
-    index='DEPARTMENT', 
-    aggfunc='mean' 
+pivot_table = final_table.pivot_table(
+    values = 'SALE AMOUNT',
+    index = 'DEPARTMENT',
+    aggfunc = 'mean'
+
 )
+pivot_table.columns = ['Average Sales by Department']
 
-dept_pivot.columns = ['Average_Sales']
-# print(dept_pivot)
+pivot_table = pivot_table.reset_index()
 
-dept_pivot = dept_pivot.reset_index()
 
 
 plt.figure(figsize=(10, 5))
@@ -74,7 +91,7 @@ plt.savefig('Total Sales per Employee.png', dpi=150)
 plt.show()
 
 plt.figure(figsize=(8, 5))
-plt.bar(dept_pivot['DEPARTMENT'], dept_pivot['Average_Sales'], color='darkorange')
+plt.bar(pivot_table['DEPARTMENT'], pivot_table['Average Sales by Department'], color='darkorange')
 plt.title('Average Sales by Department')
 plt.xlabel('Department')
 plt.ylabel('Average Sales (MAD)')
@@ -82,7 +99,9 @@ plt.tight_layout()
 plt.savefig('Average Sales by Department.png', dpi=150)
 plt.show()
 
+with pd.ExcelWriter( r'C:\Users\Nisserine\Desktop\GOAL\Day 11\####Rewriting the portfolios ###\re_6\re_write_P6.xlsx' , engine= 'openpyxl') as write :
 
-final_table.to_excel(
-        r'C:\Users\Nisserine\Desktop\GOAL\Day 11\Portfolio 6\portfolio 6 excell\Portfolio_6.xlsx', engine= 'openpyxl'
-)
+    final_table.to_excel(write , sheet_name='All information' , index= False)
+    pivot_table.to_excel(write , sheet_name='Average sales by department' , index = False)
+    
+
