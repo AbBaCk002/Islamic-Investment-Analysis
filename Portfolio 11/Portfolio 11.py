@@ -1,6 +1,6 @@
 import pandas as pd 
 import matplotlib.pyplot as plt 
-
+import os
 
 dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(dir, 'companies_financials_raw.xlsx')
@@ -30,7 +30,7 @@ def Ranking_By_Points(row):
     if row ['Haram_Income_Ratio']  >= 0.05 : score += 1 
     if row ['Liquidity_Ratio'] <= 0.51 : score += 1
     return f'Ranking_By_Points : {score}/3'
-banks['P_Rabking'] = banks.apply(Ranking_By_Points , axis= 1 )
+banks['P_Ranking'] = banks.apply(Ranking_By_Points , axis= 1 )
 def check_business(sector):
     unhalal_sectors = ['Alcohol', 'Gambling', 'Banking']
     if sector in unhalal_sectors:
@@ -74,11 +74,11 @@ plt.savefig('Ranking By Points_Sector.png', dpi=150)
 
 plt.show()
 
-print(banks)
 
 
-banks.to_excel(r'C:\Users\Nisserine\Desktop\GOAL\Day 11\Eleventh\Portfolio_11.xlsx',
-               engine='openpyxl')
+
+output_path = os.path.join(dir, "Re_portfolio_11.xlsx")
+banks.reset_index().to_excel(output_path, index=False, engine="openpyxl")
 
 
 
