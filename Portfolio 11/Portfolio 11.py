@@ -1,7 +1,7 @@
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import os
-import Steamlit as st 
+import streamlit  as st 
 
 dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(dir, 'companies_financials_raw.xlsx')
