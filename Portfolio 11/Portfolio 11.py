@@ -2,8 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt 
 
 
-banks = pd.read_excel ( r'C:\Users\Nisserine\Desktop\GOAL\Day 11\Eleventh\companies_financials_raw.xlsx' ,
-               engine='openpyxl')
+dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(dir, 'companies_financials_raw.xlsx')
+banks = pd.read_excel(file_path, engine='openpyxl')
 
 
 banks['Sector'] = banks['Sector'].str.strip().str.title()
