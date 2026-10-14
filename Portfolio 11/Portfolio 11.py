@@ -15,7 +15,7 @@ banks['Debt_Ratio'] = banks['Total_Debt (M)'] / banks['Total_Assets (M)']
 banks['Haram_Income_Ratio'] = banks['Interest_Income (M)'] / banks['Total_Revenue (M)'] 
 banks['Liquidity_Ratio'] = banks['Cash_and_Liquid_Assets (M)'] / banks['Total_Assets (M)']
 banks = banks.drop_duplicates(subset=['Company Name'], keep='first')
-
+banks.columns = banks.columns.str.strip()
 
 def Ev_ranking (row):
     Debt_ranking = 'Great' if row['Debt_Ratio'] <= 0.32 else 'Bad'
