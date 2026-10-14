@@ -1,6 +1,7 @@
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import os
+import Steamlit as st 
 
 dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(dir, 'companies_financials_raw.xlsx')
@@ -73,6 +74,34 @@ plt.tight_layout()
 plt.savefig('Ranking By Points_Sector.png', dpi=150)
 
 plt.show()
+
+# --- عرض الرسم البياني الأول ---
+st.subheader("📊 Ranking by Points per Company")
+fig1, ax1 = plt.subplots(figsize=(10, 6))
+ax1.scatter(
+    banks["P_Ranking"], banks["Company Name"], alpha=0.7, edgecolors="black"
+)
+ax1.set_title("Ranking by Points")
+ax1.set_xlabel("P Ranking")
+ax1.set_ylabel("Company Name")
+ax1.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+st.pyplot(fig1)  # <-- عرض الرسم البياني على صفحة Streamlit
+
+# --- عرض الرسم البياني الثاني ---
+st.subheader("📊 Ranking by Points per Sector")
+fig2, ax2 = plt.subplots(figsize=(10, 6))
+ax2.scatter(banks["P_Ranking"], banks["Sector"], alpha=0.7, edgecolors="black")
+ax2.set_title("Ranking by Points")
+ax2.set_xlabel("P Ranking")
+ax2.set_ylabel("Sector")
+ax2.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+st.pyplot(fig2)  # <-- عرض الرسم البياني الثاني على الصفحة
+
+# --- عرض الجدول النهائي للبيانات ---
+st.subheader("📋 Filtered Banks & Financial Data")
+st.dataframe(banks.reset_index())
 
 
 
