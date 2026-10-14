@@ -52,7 +52,7 @@ banks['AAOIFI_Compliant'] = banks.apply(aaoifi, axis=1)
 banks= banks.set_index('Company_ID')
 
 plt.figure(figsize=(10, 6))
-plt.scatter(banks['P_Rabking'], banks['Company Name'], alpha=0.7, edgecolors='black')
+plt.scatter(banks['P_Ranking'], banks['Company Name'], alpha=0.7, edgecolors='black')
 plt.title('Ranking by Points')
 plt.xlabel('P Raning ')
 plt.ylabel('Company Name ')
@@ -64,7 +64,7 @@ plt.show()
 
 
 plt.figure(figsize=(10, 6))
-plt.scatter( banks['P_Rabking'],banks['Sector'], alpha=0.7, edgecolors='black')
+plt.scatter( banks['P_Ranking'],banks['Sector'], alpha=0.7, edgecolors='black')
 plt.title('Ranking by Points')
 plt.xlabel('P Raning ')
 plt.ylabel('Sector')
